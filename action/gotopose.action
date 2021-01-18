@@ -1,0 +1,6 @@
+geometry_msgs/Pose location
+string reference
+---
+string result 
+---
+string feedback

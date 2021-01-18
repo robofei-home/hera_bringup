@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="robot_name" default=""/>
+  <arg name="map_name"   default=""/>
+  <arg name="resources"  default=""/>
+
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+
+  <arg name="hear"        default="true"/>
+  <arg name="talk"        default="true"/>
+  <arg name="map"         default="true"/>
+  <arg name="people"      default="true"/>
+  <arg name="navigation"  default="true"/>
+  <arg name="manipulator" default="true"/>
+  <arg name="objects"     default="true"/>
+  <arg name="head"        default="true"/>
+  <!-- <arg name="follow"           default="true"/> -->
+
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+
+  <!-- hear -->
+  <group if="$(arg hear)">
+    <node name="Server_Speech" pkg="gsr_ros" type="recognition.py">
+    		<param name="API" value="Google" />
+    		<param name='KEY1' value=''/>
+    		<param name='KEY2' value=''/>
+    		<param name="PATH" value="$(find gsr_ros)/src" />
+    </node>
+  </group>
+
+  <!-- talk -->
+  <group if="$(arg talk)">
+    <node name="gtts_ros" pkg="gtts_ros" type="gtts_node.py">
+      <param name="ONLINE" value="true" />
+    </node>
+  </group>
+
+  <!-- map -->
+  <group if="$(arg map)">
+    <include file="$(find map)/launch/map.launch">
+      <arg name="map_resource" default="$(arg resources)/map/$(arg map_name)"/>
+    </include>
+  </group>
+
+  <!-- people -->
+  <group if="$(arg people)">
+    <node name="people" pkg="people" type="people_node.py" output="screen">
+      <param name="clf" value="/home/robofei/catkin_ws/filename.joblib" />
+      <param name="models" value="/home/robofei/openpose/models/" />
+      <param name="image_color" value="/camera/rgb/image_raw" />
+      <param name="image_cloud" value="/camera/depth/points" />
+    </node>
+  </group>
+
+  <!-- navigation -->
+  <group if="$(arg navigation)">
+    <include file="$(find hera_nav)/launch/navigation.xml" />
+  </group>
+
+  <!-- manipulator -->
+  <group if="$(arg manipulator)">
+    <include file="$(find manip3)/launch/manip3.launch" />
+  </group>
+
+
+  <!-- objects -->
+  <group if="$(arg objects)">
+    <node name="dodo_detector_ros" pkg="dodo_detector_ros" type="detector.py" output="screen">
+        <rosparam command="load" file="$(find dodo_detector_ros)/config/main_config.yaml"/>
+        <param name="image_topic" value="/camera/rgb/image_color" />
+        <param name="point_cloud_topic" value="/camera/depth/points" />
+    </node>
+    <include file="$(find hera_objects)/launch/objects.launch" />
+  </group>
+  
+  <!-- head -->
+  <group if="$(arg head)">
+    <node pkg="head" type="head_tf.py" name="head_tf"/>
+  </group>
+
+</launch>

@@ -1,0 +1,33 @@
+robot_actuators:
+    pose:
+      comm: TOPIC
+      node: initialpose
+      type: geometry_msgs/PoseWithCovarianceStamped
+    talk:
+      comm: ACTION
+      node: gtts_ros/goal
+      type: gtts_ros/TalkActionGoal
+    hear:
+      comm: SERVICE
+      node: Recognition
+      type: gsr_ros/Start
+    move:
+      comm: TOPIC
+      node: cmd_vel
+      type: geometry_msgs/Twist
+    goto:
+      comm: ACTION
+      node: move_base/goal
+      type: move_base_msgs/MoveBaseActionGoal
+    follow:
+      comm: ACTION
+      node: social_navigation/goto/goal
+      type: social_navigation/GotoActionGoal
+    savelocal:
+      comm: SERVICE
+      node: /map/save_local
+      type: map/SaveLocal
+    head:
+      comm: TOPIC
+      node: /head_topic/goal_pos
+      type: std_msgs/Float32MultiArray

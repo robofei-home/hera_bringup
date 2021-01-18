@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- main info -->
+  <arg name="enable_rviz"         default="false"/>
+  <arg name="map_name"            default="robocup_at_home_2014"/>
+  <arg name="resources"           default="$(find hera)/resources"/>
+
+  <!-- robot info -->
+  <arg name="robot_name"          default="hera"/>
+  <arg name="robot_model"         default="$(find hera_description)/urdf/hera_description.urdf"/>
+  <arg name="teleop_keyboard"     default="false"/>
+
+  <!-- robot config -->
+  <arg name="init_pos_x"          default="0.0"/>
+  <arg name="init_pos_y"          default="0.0"/>
+  <arg name="init_pos_z"          default="0.0"/>
+  <arg name="init_yaw"            default="0.0"/>
+
+  <!-- modules config -->
+  <arg name="enable_hear"         default="true"/>
+  <arg name="enable_talk"         default="true"/>
+  <arg name="enable_map"          default="true"/>
+  <arg name="enable_people"       default="true"/>
+  <arg name="enable_navigation"   default="true"/>
+  <arg name="enable_manipulator"  default="true"/>
+  <arg name="enable_objects"      default="true"/>
+  <arg name="enable_head"      	  default="true"/>
+
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+
+  <!-- rviz -->
+  <group if="$(arg enable_rviz)" >
+    <node name="rviz" pkg="rviz" type="rviz" respawn="true"
+    args="-d $(find hera)/config/hera.rviz" />
+  </group>
+
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+
+  <!-- start robot group -->
+  <!-- <group ns="$(arg robot_name)"> -->
+    <!-- <param name="tf_prefix" value="$(arg robot_name)" /> -->
+
+    <!-- load resources -->
+    <param name="resources" value="$(arg resources)" />
+
+    <!-- load sensors/actuators -->
+    <rosparam command="load" file="$(find hera)/config/sensors.yaml" />
+    <rosparam command="load" file="$(find hera)/config/actuators.yaml" />
+
+    <!-- start robot -->
+    <node name="hera" pkg="hera" type="hera_node"
+      launch-prefix="xterm -maximized -title $(arg robot_name) -hold -e" />
+
+    <include file="$(find hera)/launch/robot.xml" >
+      <arg name="robot_name"      default="$(arg robot_name)"/>
+      <arg name="robot_model"     default="$(arg robot_model)"/>
+      <arg name="teleop_keyboard" default="$(arg teleop_keyboard)"/>
+      <arg name="init_pos_x"      default="$(arg init_pos_x)"/>
+      <arg name="init_pos_y"      default="$(arg init_pos_y)"/>
+      <arg name="init_pos_z"      default="$(arg init_pos_z)"/>
+      <arg name="init_yaw"        default="$(arg init_yaw)"/>
+    </include>
+    <include file="$(find hera)/launch/modules.xml" >
+      <arg name="robot_name"   default="$(arg robot_name)"/>
+      <arg name="map_name"     default="$(arg map_name)"/>
+      <arg name="resources"    default="$(arg resources)" />
+      <arg name="hear"         default="$(arg enable_hear)"/>
+      <arg name="talk"         default="$(arg enable_talk)"/>
+      <arg name="map"          default="$(arg enable_map)"/>
+      <arg name="people"       default="$(arg enable_people)"/>
+      <arg name="navigation"   default="$(arg enable_navigation)"/>
+      <arg name="manipulator"  default="$(arg enable_manipulator)"/>
+      <arg name="objects"      default="$(arg enable_objects)"/>
+      <arg name="head"         default="$(arg enable_head)"/>
+    </include>
+
+  <!-- </group> -->
+
+</launch>

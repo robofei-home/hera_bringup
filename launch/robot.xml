@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="robot_name" 	default="robot"/>
+  <arg name="robot_model" 	default="$(find hera_description)/robots/hera_base_only.urdf.xacro"/>
+  <arg name="teleop_keyboard"   default="false"/>
+  <arg name="init_pos_x" 	default="0.0"/>
+  <arg name="init_pos_y" 	default="0.0"/>
+  <arg name="init_pos_z" 	default="0.0"/>
+  <arg name="init_yaw"   	default="0.0"/>
+
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+
+  <!-- load urdf  -->
+   <param name="robot_description"
+    command="$(find xacro)/xacro $(arg robot_model)" /> 
+
+  <!-- joint state and robot state publishers -->
+   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <rosparam param="source_list" subst_value="true">["/manip3/joint_states", "head/joint_state"]</rosparam>
+  </node>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> -->
+
+  <node
+    name="tf_footprint_base"
+    pkg="tf"
+    type="static_transform_publisher"
+    args="0 0 0 0 0 0 base_footprint base_link 40" />
+
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+  <!-- ###################################################################### -->
+
+  <!-- keyboard teleop -->
+  <group if="$(arg teleop_keyboard)" >
+    <node
+      name="teleop_twist_keyboard"
+      pkg="teleop_twist_keyboard"
+      type="teleop_twist_keyboard.py"
+      launch-prefix="xterm -hold -e"/>
+  </group>
+
+    <!-- spawn simulated robot -->
+    <node name="spawn_robot" pkg="gazebo_ros" type="spawn_model"
+      args="-param robot_description
+            -urdf
+            -x $(arg init_pos_x)
+            -y $(arg init_pos_y)
+            -z $(arg init_pos_z)
+            -Y $(arg init_yaw)
+            -model $(arg robot_name)">
+    </node>
+
+    <node pkg="robot_base" type="utils.py" name="robot_base_utils">
+      <param name="enable_clear_costmap" value="True"/>
+      <param name="enable_amcl_update" value="True"/>
+      <param name="clear_costmap_period" value="10"/>
+      <param name="amcl_updates" value="10"/>
+    </node>
+
+</launch>

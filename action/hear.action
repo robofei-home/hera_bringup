@@ -1,0 +1,7 @@
+string[] spec
+gsr_ros/Opcs[] choices
+---
+string result
+gsr_ros/Opcs[] choices
+---
+string feedback

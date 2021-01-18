@@ -1,0 +1,16 @@
+robot_sensors:
+    odom:
+      node: odom
+      type: nav_msgs/Odometry
+    scan:
+      node: base_scan
+      type: sensor_msgs/LaserScan
+    locals:
+      node: locals
+      type: map/StringArray
+    people:
+      node: people
+      type: people/People
+    camera:
+      node: camera/rgb/image_color
+      type: sensor_msgs/Image

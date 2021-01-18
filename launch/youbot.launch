@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+
+    <group ns="robot_2" >
+     <param name="tf_prefix" value="robot_2" />
+
+      <!-- load urdf  -->
+      <param name="robot_description"
+        command="$(find xacro)/xacro --inorder
+        '$(find hera_description)/robots/hera.urdf.xacro' " />
+
+      <!-- joint state and robot state publishers -->
+      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+      <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+      <!-- spawn simulated robot -->
+      <node name="spawn_robot" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description
+              -urdf
+              -x -1.0
+              -y 1.0
+              -z 0.1
+              -yaw 0.0
+              -model robot_2">
+      </node>
+
+      <node
+        name="teleop_twist_keyboard"
+        pkg="teleop_twist_keyboard"
+        type="teleop_twist_keyboard.py"
+        launch-prefix="xterm -hold -e"/>
+
+      <node
+        name="fake_localization"
+        pkg="fake_localization"
+        type="fake_localization"/>
+      <node
+        pkg="tf"
+        type="static_transform_publisher"
+        name="map_odom_broadcaster"
+        args="0 0 0 0 0 0 /map /robot_2/odom 100" />
+    </group>
+
+</launch>

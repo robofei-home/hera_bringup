@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- arduino base -->
+    <node name="serial_node" pkg="rosserial_python" type="serial_node.py">
+      <param name="port" value="/dev/base"/>
+      <param name="baud" value="38400"/>
+    </node>
+
+    <!-- odom base -->
+    <node pkg="robot_base" type="odom.py" name="robot_base_odom"/>
+    <node pkg="robot_base" type="utils.py" name="robot_base_utils">
+      <param name="enable_clear_costmap" value="True"/>
+      <param name="enable_amcl_update" value="True"/>
+      <param name="clear_costmap_period" value="10"/>
+      <param name="amcl_updates" value="10"/>
+    </node>
+
+    <!-- hokuyo laser front -->
+    <node name="hokuyo_node" pkg="hokuyo_node" type="hokuyo_node" >
+      <remap from="scan" to="base_scan" />
+      <param name="port" value="/dev/front_laser"/>
+      <param name="frame_id" value="base_scan_link"/>
+      <param name="min_ang" value="-1.45"/>
+      <param name="max_ang" value="1.45"/>
+    </node>
+
+    <!-- hokuyo laser back -->
+    <!-- <node name="hokuyo_node_back" pkg="hokuyo_node" type="hokuyo_node" >
+      <remap from="scan" to="base_scan_back" />
+      <param name="port" value="/dev/ttyACM1"/>
+      <param name="frame_id" value="base_scan_back_link"/>
+      <param name="min_ang" value="-1.45"/>
+      <param name="max_ang" value="1.45"/>
+    </node> -->
+
+    <!-- kinect -->
+
+    <include file="$(find openni_launch)/launch/openni.launch">
+      <!--<arg name="camera" default="camera" />-->
+      <!--<arg name="device_id" default="1@X" />-->
+    </include>
+
+    <!--<include file="$(find freenect_launch)/launch/freenect.launch" >
+      <arg name="camera" default="camera" />
+    </include>-->
+
+    <!-- xtion -->
+   <!-- <include file="$(find openni2_launch)/launch/openni2.launch" >
+      <arg name="camera" default="xtion" />
+      <arg name="device_id" default="1@X" />
+    </include> -->
+
+    <!-- head -->
+    <include file="$(find head)/launch/head.launch" />
+
+    <!-- manipulator -->
+    <include file="$(find manip3)/launch/manip3.launch" />
+    <!-- <node name ="manipulator" pkg="manip3" type="manipulator.py" output="screen"/> -->
+
+</launch>
