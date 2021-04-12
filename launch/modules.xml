@@ -60,9 +60,10 @@
   <!-- navigation -->
   <group if="$(arg navigation)">
     <include file="$(find hera_nav)/launch/navigation.xml" />
+    <include file="$(find hera_nav)/launch/localization.xml" />
   </group>
 
-  <!-- manipulator -->
+   <!-- manipulator -->
   <group if="$(arg manipulator)">
     <include file="$(find manip3)/launch/manip3.launch" />
   </group>

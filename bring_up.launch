@@ -3,7 +3,7 @@
 
   <!-- main info -->
   <arg name="enable_rviz"         default="false"/>
-  <arg name="map_name"            default="robocup_at_home_2014"/>
+  <arg name="map_name"            default="$(find hera)/resources/map/larc_2020"/>
   <arg name="resources"           default="$(find hera)/resources"/>
 
   <!-- robot info -->
@@ -51,6 +51,7 @@
     <!-- load sensors/actuators -->
     <rosparam command="load" file="$(find hera)/config/sensors.yaml" />
     <rosparam command="load" file="$(find hera)/config/actuators.yaml" />
+    
 
     <!-- start robot -->
     <node name="hera" pkg="hera" type="hera_node"
