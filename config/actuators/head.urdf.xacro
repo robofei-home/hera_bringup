@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="head_base_mass"      value="0.01"/>
+  <xacro:property name="head_base_radius"    value="${pole_size_x/2}"/>
+  <xacro:property name="head_base_length"    value="0.06"/>
+
+  <xacro:property name="head_box_mass"       value="0.02"/>
+  <xacro:property name="head_box_size_x"     value="0.10"/>
+  <xacro:property name="head_box_size_y"     value="0.20"/>
+  <xacro:property name="head_box_size_z"     value="0.27"/>
+
+  <xacro:property name="mic_mass"            value="0.01"/>
+  <xacro:property name="mic_radius"          value="0.02"/>
+  <xacro:property name="mic_length"          value="0.17"/>
+  <xacro:property name="mic_gap"             value="0.02"/>
+
+  <xacro:property name="head_effort"     value="30" />
+  <xacro:property name="head_velocity"   value="0.5" />
+
+  <xacro:macro name="head" params="name parent">
+
+    <!-- head -->
+    <link name="${name}">
+      <xacro:create_cylinder
+        m="${head_base_mass}"
+        r="${head_base_radius}"
+        l="${head_base_length}">
+        <origin xyz="0 0 -${(head_base_length/2)+(head_box_size_z/2)}" rpy="0 0 0"/>
+      </xacro:create_cylinder>
+      <xacro:create_box
+        m="${head_box_mass}"
+        x="${head_box_size_x}"
+        y="${head_box_size_y}"
+        z="${head_box_size_z}">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:create_box>
+      <xacro:create_cylinder
+        m="${mic_mass}"
+        r="${mic_radius}"
+        l="${mic_length}">
+        <origin xyz="0.04 -${(head_box_size_y/2)+mic_gap+(mic_radius/2)} 0.05" rpy="0 1.45 0"/>
+      </xacro:create_cylinder>
+      <xacro:create_cylinder
+        m="${mic_mass}"
+        r="${mic_radius}"
+        l="${mic_length}">
+        <origin xyz="0.04 ${(head_box_size_y/2)+mic_gap+(mic_radius/2)} 0.05" rpy="0 1.45 0"/>
+      </xacro:create_cylinder>
+      <visual>
+        <origin xyz="0 0 -${(head_base_length)+(head_box_size_z/2)}" rpy="0 0 0"/>
+        <material name="grey"/>
+        <geometry>
+          <mesh filename="package://hera_description/meshes/head.stl"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="joint_${parent}_to_${name}" type="revolute">
+      <origin xyz="-0.06 0 ${(pole_size_z/2)+(head_base_length)+(head_box_size_z/2)}" rpy="0 0 0"/>
+      <child link="${name}"/>
+      <parent link="${parent}"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="${head_effort}" velocity="${head_velocity}" lower="-${M_PI/2}" upper="${M_PI/2}"/>
+    </joint>
+
+    <transmission name="tran_${name}">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_${parent}_to_${name}">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor_${name}">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+  </xacro:macro>
+</robot>

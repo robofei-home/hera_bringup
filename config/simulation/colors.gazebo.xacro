@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <gazebo reference="base"><material>Gazebo/Black</material></gazebo>
+  <gazebo reference="base_wheelFR"><material>Gazebo/White</material></gazebo>
+  <gazebo reference="base_wheelFL"><material>Gazebo/White</material></gazebo>
+  <gazebo reference="base_wheelBR"><material>Gazebo/White</material></gazebo>
+  <gazebo reference="base_wheelBL"><material>Gazebo/White</material></gazebo>
+  <gazebo reference="torso"><material>Gazebo/DarkGray</material></gazebo>
+  <gazebo reference="torso_sensor_plat"><material>Gazebo/DarkGray</material></gazebo>
+  <gazebo reference="head"><material>Gazebo/Gray</material></gazebo>
+
+</robot>

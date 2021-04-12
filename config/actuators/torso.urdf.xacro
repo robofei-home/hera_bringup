@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="big_box_mass"      value="1.00"/>
+  <xacro:property name="big_box_size_x"    value="0.30"/>
+  <xacro:property name="big_box_size_y"    value="${base_size_y}"/>
+  <xacro:property name="big_box_size_z"    value="0.55"/>
+
+  <xacro:property name="small_box_mass"    value="0.50"/>
+  <xacro:property name="small_box_size_x"  value="0.20"/>
+  <xacro:property name="small_box_size_y"  value="${base_size_y}"/>
+  <xacro:property name="small_box_size_z"  value="0.30"/>
+
+  <xacro:property name="head_plat_mass"    value="0.10"/>
+  <xacro:property name="head_plat_size_x"  value="0.35"/>
+  <xacro:property name="head_plat_size_y"  value="${base_size_y}"/>
+  <xacro:property name="head_plat_size_z"  value="0.05"/>
+
+  <xacro:property name="pole_mass"         value="0.20"/>
+  <xacro:property name="pole_size_x"       value="0.13"/>
+  <xacro:property name="pole_size_y"       value="0.06"/>
+  <xacro:property name="pole_size_z"       value="1.00"/>
+
+  <xacro:property name="sensor_plat_mass"             value="0.01"/>
+  <xacro:property name="sensor_plat_size_x"           value="0.10"/>
+  <xacro:property name="sensor_plat_size_y"           value="0.12"/>
+  <xacro:property name="sensor_plat_size_z"           value="0.01"/>
+
+  <xacro:property name="torso_sensor_plat_effort"     value="30" />
+  <xacro:property name="torso_sensor_plat_velocity"   value="0.5" />
+
+  <xacro:macro name="torso" params="name parent">
+
+    <!-- torso -->
+    <link name="${name}">
+      <xacro:create_box
+        m="${big_box_mass}"
+        x="${big_box_size_x}"
+        y="${big_box_size_y}"
+        z="${big_box_size_z}">
+        <origin xyz="-0.1 0 -0.225" rpy="0 0 0"/>
+      </xacro:create_box>
+      <xacro:create_box
+        m="${small_box_mass}"
+        x="${small_box_size_x}"
+        y="${small_box_size_y}"
+        z="${small_box_size_z}">
+        <origin xyz="0.15 0 -0.35" rpy="0 0 0"/>
+      </xacro:create_box>
+      <xacro:create_box
+        m="${head_plat_mass}"
+        x="${head_plat_size_x}"
+        y="${head_plat_size_y}"
+        z="${head_plat_size_z}">
+        <origin xyz="-0.06 0 0.475" rpy="0 0 0"/>
+      </xacro:create_box>
+      <xacro:create_box
+        m="${pole_mass}"
+        x="${pole_size_x}"
+        y="${pole_size_y}"
+        z="${pole_size_z}">
+        <origin xyz="-0.06 -0.18 0" rpy="0 0 0"/>
+      </xacro:create_box>
+      <xacro:create_box
+        m="${pole_mass}"
+        x="${pole_size_x}"
+        y="${pole_size_y}"
+        z="${pole_size_z}">
+        <origin xyz="-0.06 0.18 0" rpy="0 0 0"/>
+      </xacro:create_box>
+      <visual>
+        <origin xyz="0 0 -0.5" rpy="0 0 0"/>
+        <material name="dark_grey"/>
+        <geometry>
+          <mesh filename="package://hera_description/meshes/torso.stl"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <!-- sensor plat -->
+    <link name="${name}_sensor_plat">
+      <xacro:create_box
+        m="${sensor_plat_mass}"
+        x="${sensor_plat_size_x}"
+        y="${sensor_plat_size_y}"
+        z="${sensor_plat_size_z}">
+        <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      </xacro:create_box>
+      <visual>
+        <origin xyz="0.2 0 -0.2" rpy="0 0 0"/>
+        <material name="dark_grey"/>
+        <geometry>
+          <mesh filename="package://hera_description/meshes/torso_sensor_plat.stl"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="joint_${parent}_to_${name}" type="fixed">
+      <origin xyz="0 0 ${(base_size_z/2)+(pole_size_z/2)}" rpy="0 0 0"/>
+      <parent link="${parent}"/>
+      <child link="${name}"/>
+    </joint>
+    <!-- should be revolute -->
+    <joint name="joint_${name}_to_${name}_sensor_plat" type="fixed">
+      <origin xyz="0.09 0 0.46" rpy="0 ${55 *(M_PI/180)} 0"/> <!-- rpy="0 0 0" -->
+      <parent link="${name}"/>
+      <child link="${name}_sensor_plat"/>
+      <!-- <axis xyz="0 1 0"/> -->
+      <!-- <limit effort="${torso_sensor_plat_effort}" velocity="${torso_sensor_plat_velocity}"
+        lower="0.0" upper="${M_PI/2}"/> -->
+    </joint>
+
+    <!-- <transmission name="tran_${name}_sensor_plat">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint_${name}_to_${name}_sensor_plat">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor_${name}_sensor_plat">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission> -->
+
+  </xacro:macro>
+</robot>

@@ -2,16 +2,16 @@
 
 from agent.abstract_agent import AbstractAgent
 
-from hera.actions.face import Face
-from hera.actions.goto import Goto
-from hera.actions.gotopose import GotoPose
-from hera.actions.hear import Hear
-from hera.actions.move import Move
-from hera.actions.pose import Pose
-from hera.actions.talk import Talk
+from actions.face import Face
+from actions.goto import Goto
+from actions.gotopose import GotoPose
+from actions.hear import Hear
+from actions.move import Move
+from actions.pose import Pose
+from actions.talk import Talk
 #from hera.actions.follow import Follow
-from hera.actions.savelocal import SaveLocal
-from hera.actions.head import Head
+from actions.savelocal import SaveLocal
+from actions.head import Head
 
 from hera.srv import question, questionResponse
 
