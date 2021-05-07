@@ -8,7 +8,7 @@
 
   <!-- robot info -->
   <arg name="robot_name"          default="hera"/>
-  <arg name="robot_model"         default="$(find hera_description)/urdf/hera_description.urdf"/>
+  <arg name="robot_model"         default="$(find hera_description)/urdf/hera_full.urdf.xacro"/>
   <arg name="teleop_keyboard"     default="false"/>
 
   <!-- robot config -->
@@ -51,6 +51,9 @@
     <!-- load sensors/actuators -->
     <rosparam command="load" file="$(find hera)/config/sensors.yaml" />
     <rosparam command="load" file="$(find hera)/config/actuators.yaml" />
+    <rosparam command="load" file="$(find hera_description)/config/yaml/hera_control.yaml"/>
+    <rosparam file="$(find hera_description)/config/yaml/kinect_controller.yaml" command="load"/>
+
     
 
     <!-- start robot -->
