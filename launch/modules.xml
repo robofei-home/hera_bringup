@@ -17,6 +17,7 @@
   <arg name="manipulator" default="true"/>
   <arg name="objects"     default="true"/>
   <arg name="head"        default="true"/>
+  <arg name="kinect"      default="true"/>
   <!-- <arg name="follow"           default="true"/> -->
 
   <!-- ###################################################################### -->
@@ -65,9 +66,14 @@
 
    <!-- manipulator -->
   <group if="$(arg manipulator)">
-    <include file="$(find manip3)/launch/manip3.launch" />
+    <!-- <include file="$(find manip3)/launch/manip3.launch" /> -->
+    <include file="$(find manip3)/launch/manip3_simulation.launch"/>
   </group>
 
+  <group if="$(arg kinect)">
+    <!-- <include file="$(find manip3)/launch/manip3.launch" /> -->
+    <include file="$(find hera_description)/launch/kinect_controller.launch"/>
+  </group>
 
   <!-- objects -->
   <group if="$(arg objects)">

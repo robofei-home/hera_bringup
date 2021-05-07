@@ -58,7 +58,7 @@
 
     <!-- start robot -->
     <node name="hera" pkg="hera" type="hera_node"
-      launch-prefix="xterm -maximized -title $(arg robot_name) -hold -e" />
+      launch-prefix="xterm -title $(arg robot_name) -hold -e" />
 
     <include file="$(find hera)/launch/robot.xml" >
       <arg name="robot_name"      default="$(arg robot_name)"/>
@@ -81,6 +81,7 @@
       <arg name="manipulator"  default="$(arg enable_manipulator)"/>
       <arg name="objects"      default="$(arg enable_objects)"/>
       <arg name="head"         default="$(arg enable_head)"/>
+      <arg name="kinect"       default="$(arg enable_kinect)"/>
     </include>
 
   <!-- </group> -->
