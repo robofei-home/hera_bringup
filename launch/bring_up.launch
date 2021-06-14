@@ -26,6 +26,7 @@
   <arg name="enable_manipulator"  default="true"/>
   <arg name="enable_objects"      default="true"/>
   <arg name="enable_head"      	  default="true"/>
+  <arg name="enable_kinect"       default="true"/>
 
   <!-- ###################################################################### -->
   <!-- ###################################################################### -->
@@ -52,7 +53,7 @@
     <rosparam command="load" file="$(find hera)/config/sensors.yaml" />
     <rosparam command="load" file="$(find hera)/config/actuators.yaml" />
     <rosparam command="load" file="$(find hera_description)/config/yaml/hera_control.yaml"/>
-    <rosparam file="$(find hera_description)/config/yaml/kinect_controller.yaml" command="load"/>
+    <rosparam command="load" file="$(find hera_description)/config/yaml/kinect_controller.yaml"/>
 
     
 

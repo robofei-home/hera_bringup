@@ -17,7 +17,7 @@
   <arg name="manipulator" default="true"/>
   <arg name="objects"     default="true"/>
   <arg name="head"        default="true"/>
-  <arg name="kinect"      default="true"/>
+  <arg name="kinect"      default="false"/>
   <!-- <arg name="follow"           default="true"/> -->
 
   <!-- ###################################################################### -->
