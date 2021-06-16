@@ -75,15 +75,16 @@
     <include file="$(find hera_description)/launch/kinect_controller.launch"/>
   </group>
 
-  <!-- objects -->
+<!-- objects -->
   <group if="$(arg objects)">
     <node name="dodo_detector_ros" pkg="dodo_detector_ros" type="detector.py" output="screen">
         <rosparam command="load" file="$(find dodo_detector_ros)/config/main_config.yaml"/>
-        <param name="image_topic" value="/camera/rgb/image_color" />
-        <param name="point_cloud_topic" value="/camera/depth/points" />
+        <param name="image_topic" value="/kinect_one/rgb/image_raw" />
+        <param name="point_cloud_topic" value="/kinect_one/depth/points" />
     </node>
     <include file="$(find hera_objects)/launch/objects.launch" />
   </group>
+
   
   <!-- head -->
   <group if="$(arg head)">
